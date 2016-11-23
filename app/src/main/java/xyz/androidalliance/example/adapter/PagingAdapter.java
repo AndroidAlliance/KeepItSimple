@@ -13,6 +13,7 @@ import xyz.androidalliance.base.RichView;
 import xyz.androidalliance.example.screens.ScreenZeroRichView;
 
 import static xyz.androidalliance.example.screens.ScreenZeroRichView.BACKGROUND_COLOR;
+import static xyz.androidalliance.example.screens.ScreenZeroRichView.POSITION;
 
 public class PagingAdapter extends PagerAdapter {
 
@@ -20,7 +21,6 @@ public class PagingAdapter extends PagerAdapter {
     private View currentView;
     private int count = 4;
     private SparseArray<Parcelable> viewStates = new SparseArray<>(count);
-
 
     public PagingAdapter() {
     }
@@ -33,20 +33,6 @@ public class PagingAdapter extends PagerAdapter {
         final Context context = container.getContext();
         View view = null;
         switch (position) {
-            /*
-            // example
-            case 0: {
-                view = new ScreenZeroRichView(context);
-                bindView((ScreenZeroRichView) view, position);
-                break;
-            }
-            case 1: {
-                view = new ScreenOneRichView(context);
-                bindViewView((ScreenOneRichView) view, position);
-                break;
-            }
-            }
-            */
             default:
                 view = new ScreenZeroRichView(context);
                 bindView((ScreenZeroRichView) view, position);
@@ -57,14 +43,10 @@ public class PagingAdapter extends PagerAdapter {
     private void bindView(ScreenZeroRichView view, int position) {
         // example setting properties:
         Bundle properties = new Bundle();
+        properties.putInt(POSITION, position);
         properties.putInt(BACKGROUND_COLOR, Color.GRAY);
         view.setProperties(properties);
     }
-
-    /*
-    private void bindView(ScreenOneRichView view, int position) {
-    }
-    */
 
     @Override
     public int getCount() {

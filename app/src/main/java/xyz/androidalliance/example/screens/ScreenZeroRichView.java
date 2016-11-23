@@ -5,16 +5,20 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import xyz.androidalliance.base.RichView;
+import xyz.androidalliance.example.Models.Model;
 import xyz.androidalliance.example.R;
 
 public class ScreenZeroRichView extends RichView implements ScreenZeroPresenter.ViewContract {
 
+    public static final String POSITION = "POSITION";
     public static final String BACKGROUND_COLOR = "BACKGROUND_COLOR";
     private static final String STATE_SUPER = "SUPER";
 
     private ScreenZeroPresenter presenter;
+    private int position;
 
     public ScreenZeroRichView(Context context) {
         this(context, null);
@@ -27,13 +31,14 @@ public class ScreenZeroRichView extends RichView implements ScreenZeroPresenter.
     public ScreenZeroRichView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         inflateLayout(context);
-        presenter = ScreenZeroPresenter.newInstance();
+        // Model Could be injected as a Singleton, from a Dependency Resolver, or Dagger value
+        presenter = ScreenZeroPresenter.newInstance(new Model());
     }
 
     @Override
     public void setProperties(Bundle props) {
         super.setProperties(props);
-        // Example:
+        position = props.getInt(POSITION, -1);
         setBackgroundColor(props.getInt(BACKGROUND_COLOR, Color.MAGENTA));
     }
 
@@ -70,11 +75,24 @@ public class ScreenZeroRichView extends RichView implements ScreenZeroPresenter.
 
     @Override
     public void onRestoreInstanceState(Parcelable savedInstanceState) {
+        Bundle bundle = (Bundle) savedInstanceState;
+        presenter.restore(bundle);
         if (savedInstanceState != null) {
-            Bundle bundle = (Bundle) savedInstanceState;
-            presenter.restore(bundle);
             super.onRestoreInstanceState(bundle.getParcelable(STATE_SUPER));
         }
     }
 
+    @Override
+    public void setMessage(String message) {
+        ((TextView) findViewById(android.R.id.text1)).setText(message);
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 }
